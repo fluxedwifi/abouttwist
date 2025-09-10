@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>twist (fluxedwifi) — About Me</title>
   <style>
-    /* Reset & base styles */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
@@ -59,13 +58,20 @@
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.7rem;
       margin-bottom: .5rem;
       background: linear-gradient(135deg, #ff6ec4, #7873f5);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: floatIn 1s ease forwards;
+      display: inline-block;
+      animation: wave 2s infinite ease-in-out;
     }
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-2deg) scale(1.05); }
+      75% { transform: rotate(2deg) scale(1.05); }
+    }
+
     h2 {
       font-size: 1.25rem;
       font-weight: 400;
@@ -106,6 +112,19 @@
       color: var(--text);
       font-size: .95rem;
       transition: transform .2s ease, box-shadow .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .links a::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.1);
+      transition: left 0.3s;
+    }
+    .links a:hover::after {
+      left: 100%;
     }
     .links a:hover {
       transform: translateY(-3px) scale(1.05);
@@ -125,35 +144,48 @@
       right: 1rem;
       background: var(--card);
       border: none;
-      padding: .5rem .75rem;
+      padding: .6rem .8rem;
       border-radius: 999px;
       cursor: pointer;
       color: var(--text);
-      transition: background .2s ease, transform .4s ease;
       font-size: 1.2rem;
+      transition: transform 0.4s ease, background .2s ease;
     }
     .toggle-theme:hover {
-      transform: rotate(20deg) scale(1.1);
+      transform: rotate(360deg) scale(1.2);
     }
 
-    /* Floating particles for fun */
+    /* Floating particles */
     .particle {
       position: absolute;
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #fff;
-      opacity: 0.5;
+      opacity: 0.6;
       animation: floatUp 10s linear infinite;
     }
     @keyframes floatUp {
       from { transform: translateY(100vh) scale(0.5); opacity: 0; }
-      50% { opacity: 0.8; }
+      50% { opacity: 0.9; }
       to { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* Cursor glow */
+    .cursor-glow {
+      position: fixed;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(255,110,196,0.4), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      z-index: 2;
     }
   </style>
 </head>
 <body>
+  <div class="cursor-glow" id="cursorGlow"></div>
   <button class="toggle-theme" id="themeToggle">🌙</button>
 
   <main>
@@ -195,8 +227,8 @@
       }
     });
 
-    // Generate floating particles
-    for (let i = 0; i < 15; i++) {
+    // Floating particles
+    for (let i = 0; i < 20; i++) {
       const particle = document.createElement("div");
       particle.className = "particle";
       particle.style.left = Math.random() * 100 + "vw";
@@ -204,6 +236,13 @@
       particle.style.background = `hsl(${Math.random() * 360}, 70%, 70%)`;
       document.body.appendChild(particle);
     }
+
+    // Cursor glow
+    const glow = document.getElementById("cursorGlow");
+    document.addEventListener("mousemove", e => {
+      glow.style.left = e.clientX + "px";
+      glow.style.top = e.clientY + "px";
+    });
   </script>
 </body>
 </html>
